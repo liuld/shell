@@ -104,3 +104,81 @@
     root     pts/1        2016-09-18 07:50 (192.168.10.102)
     [root@manager home]# cat who.out 
     root     pts/1        2016-09-18 07:50 (192.168.10.102)
+
+# sort
+    sort -n -r aa.txt    按完整数字排序 降序
+    sort -u aa.txt  去掉重复值 
+    sort -t: -k3nr /etc/passwd  以:分割按第三字段降序排序
+# uniq
+    uniq aa.txt  连续的去掉
+    uniq -u aa.txt  显示未连续重复值
+    sort -n aa.txt  | uniq -u 排序去重
+    sort -n aa.txt  | uniq -d  显示连续重复行
+    sort -n aa.txt  | uniq -d -c  统计重复次数
+# grep
+    --color 
+    -i -v -r -n -A -B -C -l -x
+    grep -c root /etc/passwd 统计行数
+    grep -A/B/C 2 root /etc/passwd  显示匹配行和匹配行的下/上/上下二行
+    grep -n root /etc/passwd     显示行号
+    grep -r root /etc/    过滤出etc目录下所有文件内容包含root的文件
+    grep -rl root /etc/   过滤出etc目录下所有文件内容包含root的文件名
+    grep -x root:x:0:0:root:/root:/bin/bash /etc/passwd    完全匹配，相当于^root:x:0:0:root:/root:/bin/bash$
+
+# cut
+    cut -c 1/1,3/1-5 /etc/passwd    截取文件每行第1/1和3/1到5个字符串
+    cut -d: -f1/1,3/1-5 /etc/passwd         以:分割取第一/1和3/1到5分割域
+# tr
+    • 大小写转换。 
+    • 去除控制字符。 
+    • 删除空行。
+    - s选项去掉重复字符
+        echo "hellooooooo worlddddddd" | tr -s "[a-z]"          #helo world
+    删除空行
+        tr -s "[\n]" < filename
+    大小写转换
+        tr "[a-z]" "[A-Z]" < filename
+    如果需要删除文件中^M，并代之以换行。使用命令：
+        tr -s "[\r]" "[\n]" < file.txt
+# wc
+    -c 统计字节数。
+    -l 统计行数。
+    -m 统计字符数。这个标志不能与 -c 标志一起使用。
+    -w 统计字数。一个字被定义为由空白、跳格或换行字符分隔的字符串。
+    -L 打印最长行的长度。
+    -help 显示帮助信息
+    --version 显示版本信息
+
+# date
+    date -s "20161015 10:10:10"
+    date +%Y-%m-%d-%H-%M-%S
+# logger
+    [root@manager tmp]# logger "hello i am robin"
+    自定日志保存位置
+    [root@manager tmp]# vim /etc/rsyslog.conf
+    local5.*                                                /tmp/test.log
+    [root@manager tmp]# service rsyslog restart
+
+    [root@manager tmp]# logger -p local5.err -t test  -f /tmp/test.log  hhhhhhh
+    -p日志级别
+    -t 标记
+    -f 日志位置
+# bc
+    [root@manager ~]# echo "1+2" | bc
+    3
+    [root@manager ~]# echo "scale=3;3/2" | bc
+    1.500
+    [root@manager ~]# echo "ibase=10;obase=2;7" | bc
+    111
+
+    [root@manager tmp]# echo "obase=8;19" | bc
+    23
+    [root@manager tmp]# echo "obase=2;F" | bc
+    1111
+
+    [root@manager tmp]# echo "2^10" | bc
+    1024
+    计算平方根
+    [root@manager ~]# echo "sqrt(100)" | bc
+    10
+
