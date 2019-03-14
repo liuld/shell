@@ -1,1 +1,17 @@
-centos7 ip: ifconfig ens33| grep broadcast | awk '{print $2}'
+1.获取centos7 ip地址: ifconfig ens33| grep broadcast | awk '{print $2}'
+
+2.统计当前系统中有多少个用户可以登录: grep "/bin/bash$" /etc/passwd | wc -l
+
+3.将ip地址192.168.10.100转换成点分二进制
+  [root@manager ~]# echo "obase=2;192" | bc 
+  11000000
+  [root@manager ~]# echo "obase=2;168" | bc 
+  10101000
+  [root@manager ~]# echo "obase=2;10" | bc 
+  1010
+  [root@manager ~]# echo "obase=2;100" | bc 
+  1100100
+  
+4.将passwd文件按uid排序/按gid排序: sort -t: -k3n /etc/passwd    sort -t: -k4n /etc/passwd
+
+5.
