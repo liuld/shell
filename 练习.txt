@@ -1,0 +1,1 @@
+centos7 ip: ifconfig ens33| grep broadcast | awk '{print $2}'
