@@ -96,3 +96,205 @@
                        run cmd4-1
                        run cmd4-2
     fi
+# 循环语句:for
+    #!/bin/bash
+    for i in 1 3 5 7
+    do
+             echo $i
+             echo ok
+    done 
+
+    seq 1 2 100 产生1-100个数字 步长为2  脚本就可以变得更简单了
+
+    for循环的另一种写法 模拟c语言的写法  
+    for ((i=0;i<10;i++))
+    do
+             echo $i
+    done
+
+    break 和continue 跳出循环
+    break 跳出循环 脚本继续执行
+    continue 跳出本次循环,脚本继续执行
+    exit 退出脚本, 但是exit可以设置脚本返回值
+
+# select循环
+    select i in ls pwd whoami
+    do
+             $i
+    done
+# while和until循环
+    while 后边跟命令 条件为真值时循环
+    until 后边跟命令 条件为假值时循环
+
+    #!/bin/bash
+    #15.sh
+    sum=0
+    while [ $sum -lt 10 ]
+    do
+    sum=`expr $sum + 1`
+    useradd user$sum
+    echo "123456" | passwd --stdin user$sum
+    done
+    
+    #!/bin/bash
+    #16.sh
+    x=1
+    until [ $x -ge 10 ]
+    do
+    echo $x
+    x=`expr $x + 1`
+    done
+    
+# case语法结构
+    case word in
+    pattern1)
+    list1
+    ;;
+    pattern2)
+    list2
+    ;;
+    ... ...
+    patternN)
+    listN
+    ;;
+    *)
+    list*
+    ;;
+    esac
+
+# 变量替换
+    var=${parameter:-word}   若 parameter 为空或未设置，则var=word，parameter 的值不变,否则var=$parameter
+
+    var=${parameter:=3}   若 parameter 为空或未设置，则$var=$parameter=3   如果parameter设置了值，则$var=$pparameter
+
+    var=${p:+3}     若$p设置了值，则$var=3 $p不变   否则$var $p都为空
+
+# 字符串切片,替换
+    ${var:5}    从第五个字符串开始切片到结尾
+    ${var:3:5}  从第三个开始，切5个
+    ${#var}     表示$var的长度
+    ${var/str/}  第一次匹配的被替换(去掉)
+    ${var//str/}  全局的匹配被替换
+    ${var/str/newstr} 使用newstr替换str
+    ${var//str/newstr}  替换所有str
+
+    $ a=123456123789
+    $ echo ${a#1*3}                     最短匹配截取
+    456123789
+    $ echo ${a##1*3}       最长匹配截取
+    789
+
+# shell的数组
+    [root@manager ~]# ary=(a b c)
+    数组取值
+    [root@manager ~]# echo ${ary[0]}
+    a
+    [root@manager ~]# echo ${ary[1]}
+    b
+    [root@manager ~]# echo ${ary[2]}
+    c
+    [root@manager ~]# echo ${ary[3]}
+
+    [root@manager ~]# echo $ary
+    a
+
+    或者设置数组的值为字符串
+    [root@manager ~]# ary=("robin" "zorro" "lucy")
+    [root@manager ~]# echo ${ary[0]}
+    robin
+    [root@manager ~]# echo ${ary[1]}
+    zorro
+    [root@manager ~]# echo ${ary[2]}
+    lucy
+
+    取数组所有值:
+    [root@manager ~]# ary=("robin" "zorro" "lucy")
+    [root@manager ~]# echo ${ary[@]}
+    robin zorro lucy
+    或者
+    [root@manager ~]# echo ${ary[*]}
+    robin zorro lucy
+
+    数组的重新赋值
+    [root@manager ~]# ary[0]="jerry"
+    [root@manager ~]# echo ${ary[0]}
+    jerry
+
+    删除数组赋值
+    [root@manager ~]# unset ary[0]
+    [root@manager ~]# echo ${ary[0]}
+
+    删除数组
+    [root@manager ~]# unset ary
+    [root@manager ~]# echo ${ary[@]}
+
+    统计数组成员个数
+    [root@manager ~]# ary=("robin" "zorro" "lucy")
+    [root@manager ~]# echo ${#ary[@]}
+    3
+
+    统计数组成员字符个数 
+    [root@manager ~]# ary=("robin" "zorro" "lucy")
+    [root@manager ~]# echo ${#ary[1]}
+    5
+    [root@manager ~]# echo ${#ary[2]}
+    4
+
+    数组切片
+    [root@manager ~]# ary=("robin" "zorro" "lucy")
+    [root@manager ~]# ary=("robin" "zorro" "lucy" "tom" "jerry")
+    [root@manager ~]# echo ${ary[@]:1:2}
+    zorro lucy
+    [root@manager ~]# echo ${ary[@]:1:3}
+    zorro lucy tom
+
+    数组成员切片
+    [root@manager ~]# echo ${ary[0]:1:2}
+    ob
+    [root@manager ~]# echo ${ary[0]:1:3}
+    obi
+    [root@manager ~]# echo ${ary[0]:1:4}
+    obin
+    [root@manager ~]# echo ${ary[1]:2:2}
+    rr
+
+    遍历数组所有的值
+    [root@manager ~]# for i in ${ary[@]}; do echo $i; done
+    a
+    b
+    c
+
+    关联数组
+    Bash支持关联数组，它可以使用字符串作为数组索引，有时候采用字符串索引更容易理解。
+
+    1.利用内嵌索引-值列表的方法
+    [root@manager ~]# declare -A ary
+    [root@manager ~]# ary=([robin]=beijing [zorro]=shanghai)
+    [root@manager ~]# echo ${ary[robin]}
+    beijing
+    [root@manager ~]# echo ${ary[zorro]}
+    shanghai
+
+    2.使用独立的索引-值进行赋值
+    [root@manager ~]# ary[jack]=hebei
+    [root@manager ~]# ary[rose]=henan
+    [root@manager ~]# echo ${ary[jack]}
+    hebei
+    [root@manager ~]# echo ${ary[rose]}
+    henan
+
+    取数组值
+    [root@manager ~]# echo ${ary[*]}
+    shanghai beijing
+    取数组的键
+    [root@manager ~]# echo ${!ary[*]}
+    zorro robin
+
+    获取所有键值对
+    [root@manager ~]# for key in ${!ary[@]}
+    do
+        echo "$key = ${ary[$key]}"
+    done
+    zorro = shanghai
+    robin = beijing
+    
