@@ -1,4 +1,16 @@
 # expect
+    #!/usr/bin/expect  
+  
+    set timeout 30  
+
+    spawn ssh -l username 192.168.1.1  
+
+    expect "password:"  
+
+    send "ispass\r"  
+
+    interact  
+
     1. ［#!/usr/bin/expect］  
     这一行告诉操作系统脚本里的代码使用那一个shell来执行。这里的expect其实和linux下的bash、windows下的cmd是一类东西。  
     注意：这一行需要在脚本的第一行。  
@@ -34,3 +46,16 @@
     }
     expect end
     EOF
+    
+# shell脚本嵌套expect脚本
+    cat ssh.sh
+    #!/bin/bash
+    pass=123
+    /usr/bin/expect <<EOF
+    set timeout 30
+    spawn scp /root/install.log 192.168.1.1:/home
+    expect "password:"
+    send "$pass\r"
+    expect eof
+    EOF
+
