@@ -16,3 +16,42 @@
 
 # 5.将/tmp/test目录下文件名包含_close_的文件把文件名中的colse改成data
   for i in `find /tmp/test -type f -name "*_data_*"`;do newfile=`echo $i |sed 's/\(.*\)_data_\(.*\)/\1_close_\2/'`; mv $i $newfile;done
+
+# 5.1.写一个脚本，实现判断10.0.0.0/24网络里，当前在线用户的IP有哪些（方法有很多）
+  #!/bin/sh
+  for n in `seq 254`
+  do
+    ping -c1 -w1 10.0.0.$n &>/dev/null
+    if [ $? -eq 0 ]
+    then
+        echo "10.0.0.$n is up ">>/tmp/uplist.log
+    else
+        echo "10.0.0.$n is down ">>/tmp/downlist.log
+    fi
+  done
+2.批量创建10个系统帐号oldboy01-oldboy10并设置密码（密码为随机8位字符串）。　
+
+  #! /bin/bash
+  . /etc/init.d/functions
+
+  Path=/server/scripts
+  UserDb=$Path/user.db
+  FailDb=$Path/fail_user.db
+
+  [ -d "$Path" ] || mkdir-p $Path
+  [ -f "$UserDb" ] ||touch $UserDb
+  [ -f "$FailDb" ] ||touch $FailDb
+
+  for n in $(seq -w 10)
+   do
+      passwd=`echo $(date+%t%N)$RANDOM|md5sum|cut -c 2-9`
+      useradd oldboy$n >&/dev/null&& user_status=$?
+      echo "$passwd"|passwd --stdinoldboy$n >&/dev/null && pass_status=$?
+      if [ $user_status -eq 0 -a $pass_status -eq0 ];then
+         action "adduser oldboy$n"/bin/true
+         echo -e "user:\toldboy$npass:$passwd" >>$UserDb
+      else
+         action "adduser oldboy$n"/bin/false
+         echo -e "user:\toldboy$npass:$passwd" >>$FailDb
+      fi
+  done
